@@ -49,7 +49,5 @@ function generatePhotos() {
 }
 
 // Получаем массив сгенерированных фотографий
-const generatedPhotos = generatePhotos();
-
-console.log(generatedPhotos);
+generatePhotos();
 
