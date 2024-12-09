@@ -1,49 +1,19 @@
-function StringLength(str, maxLength) {
-  return str.length <= maxLength;
-}
-
-// Cтрока короче 20 символов
-StringLength('проверяемая строка', 20); // true
-// Длина строки ровно 18 символов
-StringLength('проверяемая строка', 18); // true
-// Строка длиннее 10 символов
-StringLength('проверяемая строка', 10); // false
-
-
-function Palindrome(str) {
-  str = str.toLowerCase();
-  const reversedStr = str.split('').reverse().join('');
-  return str === reversedStr;
-}
-
-// Строка является палиндромом
-Palindrome('топот'); // true
-// Несмотря на разный регистр, тоже палиндром
-Palindrome('ДовОд'); // true
-// Это не палиндром
-Palindrome('Кекс'); // false
-
-
 function checkMeetingTime(startTime, endTime, meetingStart, meetingDuration) {
-  // Функция для нормализации времени к формату "чч:мм"
-  function normalizeTime(time) {
-    const parts = time.split(':');
-    return parts.map((part) => part.padStart(2, '0')).join(':');
+
+  function timeToMinutes(time) {
+    const [hours, minutes] = time.split(':').map(Number);
+    return hours * 60 + minutes;
   }
 
-  // Нормализуем все времена
-  startTime = normalizeTime(startTime);
-  endTime = normalizeTime(endTime);
-  meetingStart = normalizeTime(meetingStart);
-
-  // Преобразуем время в минуты для удобства вычислений
-  const startTimeMinutes = parseInt(startTime.replace(':', ''), 10);
-  const endTimeMinutes = parseInt(endTime.replace(':', ''), 10);
-  const meetingStartMinutes = parseInt(meetingStart.replace(':', ''), 10);
-
-  // Вычисляем время окончания встречи в минутах
+  const startTimeMinutes = timeToMinutes(startTime);
+  const endTimeMinutes = timeToMinutes(endTime);
+  const meetingStartMinutes = timeToMinutes(meetingStart);
   const meetingEndMinutes = meetingStartMinutes + meetingDuration;
 
-  // Проверяем, что время начала и окончания встречи находится в пределах рабочего дня
   return meetingStartMinutes >= startTimeMinutes && meetingEndMinutes <= endTimeMinutes;
 }
+checkMeetingTime('8:00', '17:30', '14:00', 90);
+checkMeetingTime('8:0', '10:0', '8:0', 120);
+checkMeetingTime('08:00', '14:30', '14:00', 90);
+checkMeetingTime('14:00', '17:30', '08:0', 90);
+checkMeetingTime('8:00', '17:30', '08:00', 900);
