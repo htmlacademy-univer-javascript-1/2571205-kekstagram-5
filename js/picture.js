@@ -1,9 +1,9 @@
 import { showBigPicture } from './big-picture.js';
-import { sendRequest } from './utils.js';
+import { sendRequest, filterDefault, filterRandom, filterDiscussed, debounce } from './utils.js';
 import { showDataLoadError } from './messages.js';
 
-const DEFAULT_DEBOUNCE_DELAY = 500;
 const DATA_URL = 'https://29.javascript.htmlacademy.pro/kekstagram/data';
+const DEFAULT_DEBOUNCE_DELAY = 500;
 const picturesList = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 const imgFilters = document.querySelector('.img-filters');
@@ -48,28 +48,11 @@ const fetchPictures = async () => {
     url: DATA_URL,
     onError: () => showDataLoadError()
   });
+  if (!allPictures) {
+    return;
+  }
   renderPictures(allPictures);
   imgFilters.classList.remove('img-filters--inactive');
-};
-
-const filterDefault = (pictures) => pictures;
-
-const filterRandom = (pictures) => {
-  const randomPictures = pictures.slice().sort(() => 0.5 - Math.random());
-  return randomPictures.slice(0, 10);
-};
-
-const filterDiscussed = (pictures) => {
-  const discussedPictures = pictures.slice().sort((a, b) => b.comments.length - a.comments.length);
-  return discussedPictures;
-};
-
-const debounce = (callback, timeoutDelay = DEFAULT_DEBOUNCE_DELAY) => {
-  let timeoutId;
-  return (...rest) => {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
-  };
 };
 
 const onFilterChange = (filter) => {
@@ -86,12 +69,14 @@ const onFilterChange = (filter) => {
   }
   renderPictures(filteredPictures);
 };
+
 filterButtons.forEach((button) => {
-  button.addEventListener('click', debounce((evt) => {
+  button.addEventListener('click', (evt) => {
     filterButtons.forEach((btn) => btn.classList.remove('img-filters__button--active'));
     evt.target.classList.add('img-filters__button--active');
     const filter = evt.target.id;
-    onFilterChange(filter);
-  }));
+    debounce(() => onFilterChange(filter), DEFAULT_DEBOUNCE_DELAY)();
+  });
 });
-fetchPictures();
+
+export { fetchPictures };
