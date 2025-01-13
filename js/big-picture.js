@@ -88,4 +88,10 @@ document.addEventListener('keydown', (evt) => {
   }
 });
 
+document.removeEventListener('keydown', (evt) => {
+  if (evt.key === 'Escape') {
+    closeBigPicture();
+  }
+});
+
 export {showBigPicture};

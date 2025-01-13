@@ -76,6 +76,7 @@ const onEscapeKeyDown = (evt) => {
 const addEventListeners = () => {
   closeEditFormButton.addEventListener('click', closeOverlay);
   document.addEventListener('keydown', onEscapeKeyDown);
+  document.removeEventListener('keydown', onEscapeKeyDown);
 };
 
 addEventListeners();

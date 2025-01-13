@@ -47,6 +47,7 @@ const createMessage = (template, type, closeCallback) => {
     }
   };
   document.addEventListener('keydown', onEscapeKeyDown);
+  document.removeEventListener('keydown', onEscapeKeyDown);
 
   section.addEventListener('click', (evt) => {
     if (evt.target === section) {
